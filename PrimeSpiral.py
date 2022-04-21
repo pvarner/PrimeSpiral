@@ -51,6 +51,11 @@ distanceCounter = 0
 distance = 0
 num = 0
 
+# Config variables
+rectSize = 5
+numSpacing = 5 
+turnsToTake = 500
+
 
 def isPrime(num):
     for i in range(2,isqrt(num) + 2):
@@ -58,6 +63,41 @@ def isPrime(num):
             return True
 
     return False
+
+
+def drawNum(num):
+    global x_index
+    global y_index
+
+    text = font.render(str(num), True, black)
+    
+    # create a rectangular object for the
+    # text surface object
+    textRect = text.get_rect()
+    
+    # set the center of the rectangular object.
+    textRect.center = (x_index, y_index)
+
+    # copying the text surface object
+    # to the display surface object
+    # at the center coordinate.
+    if not isPrime(num):
+        display_surface.blit(text, textRect)
+
+
+def drawSquare(num):
+    global x_index
+    global y_index
+    
+    text = font.render(str(num), True, black)
+
+    # copying the text surface object
+    # to the display surface object
+    # at the center coordinate.
+    if not isPrime(num):
+        pygame.draw.rect(display_surface, black, pygame.Rect( x_index, y_index, rectSize, rectSize ))
+        pygame.display.flip()
+    
 
 def calcNumbers():
     global x_index
@@ -67,9 +107,9 @@ def calcNumbers():
     global distance
     global num
     global curState
+    global numSpacing
+    global turnsToTake
 
-    numSpacing = 40
-    turnsToTake = 500
 
     # completely fill the surface object
     # with white color
@@ -84,15 +124,9 @@ def calcNumbers():
 
         for i in range(distance):
             num = num + 1
-            text = font.render(str(num), True, black)
-            
-            # create a rectangular object for the
-            # text surface object
-            textRect = text.get_rect()
-            
-            # set the center of the rectangular object.
-            textRect.center = (x_index, y_index)
 
+            #drawNum(num)
+            drawSquare(num)
 
             # adjust index to place the next number base on current direction
             if curState == state.right:
@@ -105,11 +139,6 @@ def calcNumbers():
                 y_index = y_index + numSpacing
 
 
-            # copying the text surface object
-            # to the display surface object
-            # at the center coordinate.
-            if not isPrime(num):
-                display_surface.blit(text, textRect)
 
         # adjust index to place the next number base on current direction
         if curState == state.right:
